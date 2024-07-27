@@ -1,18 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/adapters.dart';
 
 import '../model/add_date.dart';
 import '../data/utlity.dart';
+import '../widgets/add_screen.dart';
 
-class Home extends StatefulWidget {
-  const Home({Key? key}) : super(key: key);
+class ExpenseTrackingScreen extends StatefulWidget {
+  static const String routeName = "/expense-tracking-screen";
+  const ExpenseTrackingScreen({Key? key}) : super(key: key);
 
   @override
-  State<Home> createState() => _HomeState();
+  State<ExpenseTrackingScreen> createState() => _ExpenseTrackingScreenState();
 }
 
-class _HomeState extends State<Home> {
+class _ExpenseTrackingScreenState extends State<ExpenseTrackingScreen> {
   var history;
   final box = Hive.box<AddData>('data');
   final List<String> day = [
@@ -27,53 +30,60 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-          child: ValueListenableBuilder(
-              valueListenable: box.listenable(),
-              builder: (context, value, child) {
-                return CustomScrollView(
-                  slivers: [
-                    SliverToBoxAdapter(
-                      child: SizedBox(height: 340, child: _head()),
-                    ),
-                    SliverToBoxAdapter(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 15),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'Transactions History',
-                              style: TextStyle(
-                                fontWeight: FontWeight.w600,
-                                fontSize: 19,
-                                color: Colors.black,
-                              ),
-                            ),
-                            Text(
-                              'See all',
-                              style: TextStyle(
-                                fontWeight: FontWeight.w600,
-                                fontSize: 15,
-                                color: Colors.grey,
-                              ),
-                            ),
-                          ],
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.of(context)
+              .push(MaterialPageRoute(builder: (context) => const AddScreen()));
+        },
+        backgroundColor: const Color(0xff368983),
+        child: const Icon(Icons.add),
+      ),
+      body: ValueListenableBuilder(
+          valueListenable: box.listenable(),
+          builder: (context, value, child) {
+            return CustomScrollView(
+              slivers: [
+                SliverToBoxAdapter(
+                  child: SizedBox(height: 340, child: _head()),
+                ),
+                const SliverToBoxAdapter(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 15),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Transactions History',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 19,
+                            color: Colors.black,
+                          ),
                         ),
-                      ),
+                        Text(
+                          'See all',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 15,
+                            color: Colors.grey,
+                          ),
+                        ),
+                      ],
                     ),
-                    SliverList(
-                      delegate: SliverChildBuilderDelegate(
-                        (context, index) {
-                          history = box.values.toList()[index];
-                          return getList(history, index);
-                        },
-                        childCount: box.length,
-                      ),
-                    )
-                  ],
-                );
-              })),
+                  ),
+                ),
+                SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                    (context, index) {
+                      history = box.values.toList()[index];
+                      return getList(history, index);
+                    },
+                    childCount: box.length,
+                  ),
+                )
+              ],
+            );
+          }),
     );
   }
 
@@ -94,14 +104,14 @@ class _HomeState extends State<Home> {
       ),
       title: Text(
         history.name,
-        style: TextStyle(
+        style: const TextStyle(
           fontSize: 17,
           fontWeight: FontWeight.w600,
         ),
       ),
       subtitle: Text(
         '${day[history.datetime.weekday - 1]}  ${history.datetime.year}-${history.datetime.day}-${history.datetime.month}',
-        style: TextStyle(
+        style: const TextStyle(
           fontWeight: FontWeight.w600,
         ),
       ),
@@ -124,34 +134,17 @@ class _HomeState extends State<Home> {
             Container(
               width: double.infinity,
               height: 240,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 color: Color(0xff368983),
                 borderRadius: BorderRadius.only(
                   bottomLeft: Radius.circular(20),
                   bottomRight: Radius.circular(20),
                 ),
               ),
-              child: Stack(
+              child: const Stack(
                 children: [
-                  Positioned(
-                    top: 35,
-                    left: 340,
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(7),
-                      child: Container(
-                        height: 40,
-                        width: 40,
-                        color: Color.fromRGBO(250, 250, 250, 0.1),
-                        child: Icon(
-                          Icons.notification_add_outlined,
-                          size: 30,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ),
                   Padding(
-                    padding: const EdgeInsets.only(top: 35, left: 10),
+                    padding: EdgeInsets.only(top: 35, left: 10),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -180,13 +173,13 @@ class _HomeState extends State<Home> {
           ],
         ),
         Positioned(
-          top: 140,
-          left: 37,
+          top: 100,
+          left: MediaQuery.of(context).size.width * 0.1,
           child: Container(
             height: 170,
             width: 320,
             decoration: BoxDecoration(
-              boxShadow: [
+              boxShadow: const [
                 BoxShadow(
                   color: Color.fromRGBO(47, 125, 121, 0.3),
                   offset: Offset(0, 6),
@@ -194,14 +187,14 @@ class _HomeState extends State<Home> {
                   spreadRadius: 6,
                 ),
               ],
-              color: Color.fromARGB(255, 47, 125, 121),
+              color: const Color.fromARGB(255, 47, 125, 121),
               borderRadius: BorderRadius.circular(15),
             ),
             child: Column(
               children: [
-                SizedBox(height: 10),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                const SizedBox(height: 10),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 15),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -220,14 +213,14 @@ class _HomeState extends State<Home> {
                     ],
                   ),
                 ),
-                SizedBox(height: 7),
+                const SizedBox(height: 7),
                 Padding(
                   padding: const EdgeInsets.only(left: 15),
                   child: Row(
                     children: [
                       Text(
                         '\$ ${total()}',
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 25,
                           color: Colors.white,
@@ -236,9 +229,9 @@ class _HomeState extends State<Home> {
                     ],
                   ),
                 ),
-                SizedBox(height: 25),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                const SizedBox(height: 25),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 15),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -289,7 +282,7 @@ class _HomeState extends State<Home> {
                     ],
                   ),
                 ),
-                SizedBox(height: 6),
+                const SizedBox(height: 6),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 30),
                   child: Row(
@@ -297,7 +290,7 @@ class _HomeState extends State<Home> {
                     children: [
                       Text(
                         '\$ ${income()}',
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontWeight: FontWeight.w600,
                           fontSize: 17,
                           color: Colors.white,
@@ -305,7 +298,7 @@ class _HomeState extends State<Home> {
                       ),
                       Text(
                         '\$ ${expenses()}',
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontWeight: FontWeight.w600,
                           fontSize: 17,
                           color: Colors.white,

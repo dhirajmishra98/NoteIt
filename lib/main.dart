@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:noteit/router.dart';
 
 import 'model/add_date.dart';
 import 'widgets/bottom_navigation_bar.dart';
@@ -16,9 +17,14 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
+      title: 'Note It',
       debugShowCheckedModeBanner: false,
-      home: BottomNavBar(),
+      theme: ThemeData(
+        useMaterial3: true,
+      ),
+      onGenerateRoute: (settings) => generateRoute(settings),
+      home: const BottomNavBar(),
     );
   }
 }

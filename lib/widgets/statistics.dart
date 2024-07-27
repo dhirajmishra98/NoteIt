@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../model/add_date.dart';
 import '../data/utlity.dart';
-import '../widgets/chart.dart';
+import 'chart.dart';
 
 class Statistics extends StatefulWidget {
   const Statistics({Key? key}) : super(key: key);
