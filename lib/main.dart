@@ -1,23 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:noteit/screens/home_screen.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
-void main() {
+import 'model/add_date.dart';
+import 'widgets/bottom_navigation_bar.dart';
+
+void main() async {
+  await Hive.initFlutter();
+  Hive.registerAdapter(AdddataAdapter());
+  await Hive.openBox<AddData>('data');
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({Key? key}) : super(key: key);
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home:const HomeScreen(),
+    return const MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: BottomNavBar(),
     );
   }
 }
